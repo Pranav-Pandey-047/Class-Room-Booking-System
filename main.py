@@ -5,7 +5,7 @@ class Room:
     """
     Represents a classroom room with unique ID, building, capacity, and booked hours.
     
-    Design choice: Using a set for booked_hours for O(1) lookup and no duplicates.
+    Design choice: Using a set for booked_hours.
     Hours are integers from 0 to 23.
     """
     def __init__(self, room_no, building, capacity):
