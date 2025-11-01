@@ -5,7 +5,7 @@ class Room:
     """
     Represents a classroom room with unique ID, building, capacity, and booked hours.
     
-    Design choice: Using a set for booked_hours.
+    Design choice: Using a set for booked_hours for O(1) lookup and no duplicates.
     Hours are integers from 0 to 23.
     """
     def __init__(self, room_no, building, capacity):
@@ -110,6 +110,13 @@ class RoomManager:
             raise ValueError(f"Room '{room_no}' not found.")
         return room
 
+    def delete_room(self, room_no):
+        """Delete a room by room number."""
+        room = self._find_room(room_no)
+        if room is None:
+            raise ValueError(f"Room '{room_no}' not found.")
+        self.rooms.remove(room)
+
     def _find_room(self, room_no):
         """Helper to find a room by ID."""
         for room in self.rooms:
@@ -158,7 +165,8 @@ def display_menu():
     print("3. Find available rooms")
     print("4. View room details and bookings")
     print("5. Cancel a room booking")
-    print("6. Exit")
+    print("6. Delete a room")
+    print("7. Exit")
 
 def get_user_input(prompt, type_func=str, default=None):
     """Get user input with optional default."""
@@ -185,7 +193,7 @@ def main():
 
     while True:
         display_menu()
-        choice = input("Enter your choice (1-6): ").strip()
+        choice = input("Enter your choice (1-7): ").strip()
 
         try:
             if choice == "1":
@@ -271,6 +279,27 @@ def main():
                 print(f"Booking cancelled for room '{room_no}' at hour {hour}.")
 
             elif choice == "6":
+                room_no = get_user_input("Enter room ID to delete:", str, None)
+                if not room_no:
+                    print("Room ID is required.")
+                    continue
+                room = manager._find_room(room_no)
+                if room is None:
+                    print(f"Error: Room '{room_no}' not found.")
+                    continue
+                bookings_count = len(room.booked_hours)
+                if bookings_count > 0:
+                    confirm = get_user_input(f"Room '{room_no}' has {bookings_count} booking(s). Are you sure you want to delete it? (yes/no):", str, None)
+                    if confirm and confirm.lower() in ['yes', 'y']:
+                        manager.delete_room(room_no)
+                        print(f"Room '{room_no}' deleted successfully.")
+                    else:
+                        print("Deletion cancelled.")
+                else:
+                    manager.delete_room(room_no)
+                    print(f"Room '{room_no}' deleted successfully.")
+
+            elif choice == "7":
                 manager.save_to_csv()
                 print("Exiting.")
                 break
