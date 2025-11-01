@@ -1,7 +1,8 @@
 room_no,building,capacity,booked_hours
-5101,LTC,100,
+5101,LTC,100,1,2
 5102,LTC,400,
 5103,LTC,100
 5104,LTC,100
 5105,LTC,400
 5106,LTC,100
+
