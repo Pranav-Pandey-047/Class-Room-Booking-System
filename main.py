@@ -168,24 +168,6 @@ def display_menu():
     print("6. Delete a room")
     print("7. Exit")
 
-def get_user_input(prompt, type_func=str, default=None):
-    """Get user input with optional default."""
-    if default is not None:
-        inp = input(f"{prompt} (or press Enter for default '{default}'): ").strip()
-    else:
-        inp = input(f"{prompt}: ").strip()
-    if not inp:
-        return default
-    try:
-        return type_func(inp)
-    except ValueError:
-        if default is not None:
-            print("Invalid input. Using default.")
-            return default
-        else:
-            print("Invalid input.")
-            return None
-
 def main():
     """Main menu-driven loop."""
     manager = RoomManager()
@@ -197,15 +179,15 @@ def main():
 
         try:
             if choice == "1":
-                room_no = get_user_input("Enter room ID:", str, None)
+                room_no = input("Enter room ID: ").strip()
                 if not room_no:
                     print("Room ID is required.")
                     continue
-                building = get_user_input("Enter building name:", str, None)
+                building = input("Enter building name: ").strip()
                 if not building:
                     print("Building name is required.")
                     continue
-                capacity_str = get_user_input("Enter capacity:", str, None)
+                capacity_str = input("Enter capacity: ").strip()
                 if not capacity_str:
                     print("Capacity is required.")
                     continue
@@ -218,11 +200,11 @@ def main():
                 print(f"Room '{room_no}' added successfully.")
 
             elif choice == "2":
-                room_no = get_user_input("Enter room ID to book:", str, None)
+                room_no = input("Enter room ID to book: ").strip()
                 if not room_no:
                     print("Room ID is required.")
                     continue
-                hour_str = get_user_input("Enter hour (0-23):", str, None)
+                hour_str = input("Enter hour (0-23): ").strip()
                 if not hour_str:
                     print("Hour is required.")
                     continue
@@ -235,10 +217,10 @@ def main():
                 print(f"Room '{room_no}' booked for hour {hour}.")
 
             elif choice == "3":
-                building = get_user_input("Enter building (optional):", str, None)
-                min_cap_str = get_user_input("Enter minimum capacity (optional):", str, None)
+                building = input("Enter building (optional): ").strip() or None
+                min_cap_str = input("Enter minimum capacity (optional): ").strip() or None
                 min_capacity = int(min_cap_str) if min_cap_str else None
-                hour_str = get_user_input("Enter hour to check availability (optional):", str, None)
+                hour_str = input("Enter hour to check availability (optional): ").strip() or None
                 hour = int(hour_str) if hour_str else None
 
                 rooms = manager.find_rooms(building, min_capacity, hour)
@@ -251,7 +233,7 @@ def main():
                         print(f"- {room.room_no} ({room.building}, cap: {room.capacity}) - {status} at hour {hour}" if hour else f"- {room.room_no} ({room.building}, cap: {room.capacity})")
 
             elif choice == "4":
-                room_no = get_user_input("Enter room ID to view:", str, None)
+                room_no = input("Enter room ID to view: ").strip()
                 if not room_no:
                     print("Room ID is required.")
                     continue
@@ -262,11 +244,11 @@ def main():
                 print(f"Booked hours: {sorted(room.booked_hours) if room.booked_hours else 'None'}")
 
             elif choice == "5":
-                room_no = get_user_input("Enter room ID to cancel booking:", str, None)
+                room_no = input("Enter room ID to cancel booking: ").strip()
                 if not room_no:
                     print("Room ID is required.")
                     continue
-                hour_str = get_user_input("Enter hour to cancel (0-23):", str, None)
+                hour_str = input("Enter hour to cancel (0-23): ").strip()
                 if not hour_str:
                     print("Hour is required.")
                     continue
@@ -279,7 +261,7 @@ def main():
                 print(f"Booking cancelled for room '{room_no}' at hour {hour}.")
 
             elif choice == "6":
-                room_no = get_user_input("Enter room ID to delete:", str, None)
+                room_no = input("Enter room ID to delete: ").strip()
                 if not room_no:
                     print("Room ID is required.")
                     continue
@@ -289,7 +271,7 @@ def main():
                     continue
                 bookings_count = len(room.booked_hours)
                 if bookings_count > 0:
-                    confirm = get_user_input(f"Room '{room_no}' has {bookings_count} booking(s). Are you sure you want to delete it? (yes/no):", str, None)
+                    confirm = input(f"Room '{room_no}' has {bookings_count} booking(s). Are you sure you want to delete it? (yes/no): ").strip()
                     if confirm and confirm.lower() in ['yes', 'y']:
                         manager.delete_room(room_no)
                         print(f"Room '{room_no}' deleted successfully.")
